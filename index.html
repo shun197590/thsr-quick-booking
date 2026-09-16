@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101820">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="高鐵極速訂票">
+  <title>台灣高鐵｜極速訂票 PWA</title>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<main class="wrap">
+  <section class="hero">
+    <div class="hero-top">
+      <div>
+        <div class="eyebrow">THSR QUICK BOOKING · FLAGSHIP STABLE</div>
+        <h1>台灣高鐵<br>一鍵快速訂票 PWA</h1>
+        <p>先把行程、乘客票種與提醒準備好；開賣或要訂票時，一鍵複製行程摘要並直達台灣高鐵官方網路訂票。</p>
+      </div>
+      <div class="train-mark">THSR</div>
+    </div>
+    <div class="hero-actions">
+      <button id="goTarget" class="btn primary">⚡ 極速進入主攻行程</button>
+      <a class="btn glass" href="https://irs.thsrc.com.tw/IMINT/" target="_blank" rel="noopener">🚄 官方網路訂票</a>
+    </div>
+    <button id="installBtn" class="btn glass wide">📲 安裝到手機主畫面</button>
+    <div id="installHelp" class="install-help">Android Chrome：右上角 ⋮ →「安裝應用程式／加到主畫面」。<br>iPhone Safari：分享 →「加入主畫面」。</div>
+  </section>
+
+  <section class="card" id="targetCard">
+    <div class="section-head">
+      <div><h2>🎯 目前主攻行程</h2><p class="hint">把最近要搶票或最重要的行程設為「主攻」。</p></div>
+      <span id="targetStatusBadge" class="badge badge-neutral">尚未設定</span>
+    </div>
+    <div id="targetPanel" class="target-panel">
+      <div class="target-route" id="targetRoute">尚未設定行程</div>
+      <div class="target-meta" id="targetMeta">先在下方新增行程。</div>
+      <div class="countdown">
+        <div class="time-box"><b id="cdDays">--</b><span>天</span></div>
+        <div class="time-box"><b id="cdHours">--</b><span>時</span></div>
+        <div class="time-box"><b id="cdMinutes">--</b><span>分</span></div>
+        <div class="time-box"><b id="cdSeconds">--</b><span>秒</span></div>
+      </div>
+      <div id="countdownLabel" class="countdown-label">尚未設定開賣提醒時間</div>
+      <div class="action-grid">
+        <button id="targetBookNow" class="btn accent big">🚄 複製行程＋開官方訂票</button>
+        <button id="targetCopySummary" class="btn soft">📋 複製行程摘要</button>
+        <button id="targetSaleCalendar" class="btn soft">⏰ 加入開賣提醒</button>
+        <button id="targetTravelCalendar" class="btn soft">📅 加入乘車行程</button>
+      </div>
+      <div id="targetStatus" class="status"></div>
+    </div>
+  </section>
+
+  <section class="card" id="tripFormCard">
+    <h2>➕ 新增／編輯行程</h2>
+    <p class="hint">本 PWA 不保存身分證、護照或信用卡資料；需要時請在高鐵官方系統輸入。</p>
+    <input id="editingId" type="hidden">
+    <div class="preset-row">
+      <button class="preset" data-from="左營" data-to="台北">左營 → 台北</button>
+      <button class="preset" data-from="台南" data-to="台北">台南 → 台北</button>
+      <button class="preset" data-from="左營" data-to="台中">左營 → 台中</button>
+      <button class="preset" data-from="台北" data-to="左營">台北 → 左營</button>
+    </div>
+    <div class="grid">
+      <div class="field"><label for="tripName">行程名稱</label><input id="tripName" placeholder="例如：台北開會"></div>
+      <div class="field"><label for="tripType">行程類型</label><select id="tripType"><option value="oneway">單程</option><option value="roundtrip">去回程</option></select></div>
+      <div class="field"><label for="origin">出發站 *</label><select id="origin"></select></div>
+      <div class="field"><label for="destination">到達站 *</label><select id="destination"></select></div>
+      <div class="field"><label for="departDate">去程日期 *</label><input id="departDate" type="date"></div>
+      <div class="field"><label for="departTime">希望出發時間 *</label><input id="departTime" type="time"></div>
+      <div class="field return-field"><label for="returnDate">回程日期</label><input id="returnDate" type="date"></div>
+      <div class="field return-field"><label for="returnTime">希望回程時間</label><input id="returnTime" type="time"></div>
+      <div class="field"><label for="carClass">車廂偏好</label><select id="carClass"><option value="不限">不限／進官方系統再選</option><option value="標準車廂">標準車廂</option><option value="商務車廂">商務車廂</option></select></div>
+      <div class="field"><label for="saleOpenAt">開賣／搶票提醒時間</label><input id="saleOpenAt" type="datetime-local"></div>
+    </div>
+    <h3 class="subhead">乘客票種</h3>
+    <div class="ticket-grid">
+      <label class="ticket-count">全票<input id="adultCount" type="number" min="0" max="10" value="1"></label>
+      <label class="ticket-count">孩童票<input id="childCount" type="number" min="0" max="10" value="0"></label>
+      <label class="ticket-count">敬老票<input id="seniorCount" type="number" min="0" max="10" value="0"></label>
+      <label class="ticket-count">愛心票<input id="disabledCount" type="number" min="0" max="10" value="0"></label>
+      <label class="ticket-count">大學生<input id="studentCount" type="number" min="0" max="10" value="0"></label>
+    </div>
+    <div id="passengerHint" class="mini-hint"></div>
+    <div class="grid top-gap">
+      <div class="field"><label for="tripStatus">狀態</label><select id="tripStatus"><option value="計畫中">計畫中</option><option value="待開賣">待開賣</option><option value="待訂票">待訂票</option><option value="已訂位">已訂位</option><option value="已付款">已付款</option><option value="已取票">已取票</option><option value="已取消">已取消</option></select></div>
+      <div class="field"><label for="reservationCode">訂位代號（選填）</label><input id="reservationCode" autocomplete="off" placeholder="訂位完成後再填"></div>
+      <div class="field"><label for="paymentDeadline">付款期限（選填）</label><input id="paymentDeadline" type="datetime-local"></div>
+      <div class="field"><label for="note">備註</label><input id="note" placeholder="例如：優先早鳥、靠走道"></div>
+    </div>
+    <div class="row">
+      <button id="saveTrip" class="btn accent">💾 儲存行程</button>
+      <button id="swapStations" class="btn soft">⇄ 對調起訖站</button>
+      <button id="regularOpenRef" class="btn soft">🗓 一般29日規則參考</button>
+      <button id="clearForm" class="btn neutral">清空表單</button>
+    </div>
+    <div id="formStatus" class="status"></div>
+    <div class="warning">「一般29日規則參考」只會以乘車日往前 28 天、00:00 作為一般規則的參考值；週五／週六延伸訂位及疏運、特殊公告可能不同，請以高鐵官方公告為準。</div>
+  </section>
+
+  <section class="card">
+    <div class="section-head"><div><h2>🧭 我的行程</h2><p class="hint">多行程管理、快速切換主攻、紀錄訂位進度。</p></div><span id="tripCount" class="badge badge-blue">0 筆</span></div>
+    <div class="toolbar">
+      <select id="statusFilter"><option value="all">全部狀態</option><option>計畫中</option><option>待開賣</option><option>待訂票</option><option>已訂位</option><option>已付款</option><option>已取票</option><option>已取消</option></select>
+      <button id="sortSale" class="btn soft small">依開賣時間</button>
+      <button id="sortTravel" class="btn soft small">依乘車日期</button>
+    </div>
+    <div id="tripList" class="trip-list"></div>
+  </section>
+
+  <section class="card"><h2>⚡ 主攻行程快速複製</h2><p class="hint">進入官方訂票頁後，必要時快速複製各項資料。</p><div id="quickCopyList" class="quick-list"></div></section>
+
+  <section class="card">
+    <h2>🔔 開賣提醒與搶票模式</h2>
+    <div class="chips"><label class="chip"><input id="rem30" type="checkbox" checked>30 分鐘前</label><label class="chip"><input id="rem10" type="checkbox" checked>10 分鐘前</label><label class="chip"><input id="rem5" type="checkbox" checked>5 分鐘前</label><label class="chip"><input id="rem1" type="checkbox" checked>1 分鐘前</label></div>
+    <div class="toggle-grid">
+      <label class="toggle"><input id="notifyToggle" type="checkbox"><span><b>系統通知</b><small>瀏覽器支援且允許時使用</small></span></label>
+      <label class="toggle"><input id="vibrateToggle" type="checkbox" checked><span><b>Android 震動</b><small>支援裝置會震動提示</small></span></label>
+      <label class="toggle"><input id="wakeToggle" type="checkbox"><span><b>保持螢幕喚醒</b><small>搶票前避免螢幕自動關閉</small></span></label>
+      <label class="toggle"><input id="soundToggle" type="checkbox"><span><b>提示音</b><small>需先與頁面互動</small></span></label>
+    </div>
+    <div class="row"><button id="requestNotify" class="btn soft">🔔 開啟通知權限</button><button id="testReminder" class="btn soft">測試提醒</button></div>
+    <div id="reminderStatus" class="status"></div>
+    <div class="info">純 GitHub Pages PWA 在完全關閉後無法保證背景 JavaScript 仍準時執行，所以「加入開賣提醒到手機行事曆」是關閉 PWA 後較可靠的備援。</div>
+  </section>
+
+  <section class="card">
+    <h2>🗂 資料備份與還原</h2>
+    <p class="hint">所有行程資料都保存在此裝置的瀏覽器 localStorage。建議定期匯出備份。</p>
+    <div class="row"><button id="exportData" class="btn soft">⬇ 匯出 JSON 備份</button><button id="importDataBtn" class="btn soft">⬆ 匯入 JSON 備份</button><button id="resetAll" class="btn danger">清除全部資料</button><input id="importFile" type="file" accept="application/json" hidden></div>
+    <div id="backupStatus" class="status"></div>
+  </section>
+
+  <section class="card">
+    <h2>🔗 台灣高鐵官方入口</h2>
+    <div class="link-grid">
+      <a class="official-link" href="https://irs.thsrc.com.tw/IMINT/" target="_blank" rel="noopener"><b>網路訂票</b><span>訂購車票／管理訂位</span></a>
+      <a class="official-link" href="https://www.thsrc.com.tw/ArticleContent/a3b630bb-1066-4352-a1ef-58c7b4e8ef7c" target="_blank" rel="noopener"><b>時刻表與票價</b><span>先查車次與票價</span></a>
+      <a class="official-link" href="https://www.thsrc.com.tw/ArticleContent/d4b49835-e43b-4be8-bc4d-0a1fe74143ff" target="_blank" rel="noopener"><b>訂位開放時程</b><span>確認一般與特殊開放日</span></a>
+      <a class="official-link" href="https://www.thsrc.com.tw/ArticleContent/dea241a9-fe69-4e9d-b9a5-6caed6e486d6" target="_blank" rel="noopener"><b>網路訂票規定</b><span>付款、取票、變更與退票</span></a>
+    </div>
+  </section>
+
+  <section class="card privacy-card"><h2>🔒 穩定版資料原則</h2><p>為降低風險，本 PWA <b>不保存身分證號、護照號碼、信用卡號、安全碼</b>，也不破解驗證機制、不自動付款、不自動送出訂位。最後交易仍在台灣高鐵官方系統完成。</p></section>
+  <p class="footer">本工具為個人行程準備與官方訂票捷徑，非台灣高鐵官方 App。官方規則、票價、餘票、優惠與實際訂位結果，以台灣高鐵系統顯示為準。</p>
+</main>
+<script src="./app.js"></script>
+</body>
+</html>
