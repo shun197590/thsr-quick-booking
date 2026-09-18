@@ -12,3 +12,30 @@
 .chips{display:flex;gap:8px;flex-wrap:wrap}.chip{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:8px 11px;background:#fcfdfe;font-size:13px}.chip input,.toggle input{width:20px;height:20px;margin:0}.toggle-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.toggle{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fcfdfe;display:flex;align-items:center;gap:10px}.toggle b{display:block;font-size:14px}.toggle small{display:block;font-size:11px;color:var(--muted);margin-top:2px;line-height:1.45}
 .link-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.official-link{border:1px solid var(--line);border-radius:14px;padding:13px;text-decoration:none;color:var(--ink);background:#fcfdfe}.official-link b{display:block;font-size:14px}.official-link span{display:block;font-size:12px;color:var(--muted);margin-top:3px}.privacy-card p{font-size:13px;line-height:1.7;color:#53616a;margin:6px 0 0}.footer{font-size:12px;color:#71808a;line-height:1.7;margin:16px 3px 0}
 @media(max-width:720px){.hero-actions,.grid,.toggle-grid,.link-grid{grid-template-columns:1fr}.ticket-grid{grid-template-columns:repeat(2,1fr)}.trip{grid-template-columns:1fr}.trip-actions{max-width:none;justify-content:flex-start}.action-grid{grid-template-columns:1fr}h1{font-size:25px}}
+
+
+/* v1.2 身分證與一鍵填表 */
+.sensitive-card{border-color:#ead4d5}
+.input-with-button{display:grid;grid-template-columns:1fr auto;gap:7px}
+.input-with-button .btn{min-width:66px}
+.security-note{
+  margin-top:10px;border-radius:12px;padding:11px 12px;background:#f7f2f2;color:#60494a;
+  font-size:12px;line-height:1.65;border:1px solid #eadede
+}
+.autofill-summary{
+  border:1px solid var(--line);border-radius:14px;padding:12px;background:#fafcfd;
+  color:#40515e;font-size:13px;line-height:1.65
+}
+.codebox{
+  margin-top:10px;background:#101820;color:#eaf2f8;border-radius:13px;padding:12px;
+  font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  word-break:break-all;max-height:220px;overflow:auto
+}
+.encrypted-only.hidden{display:none!important}
+
+/* v2.0 半自動訂位助手 */
+.assistant-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+.assistant-flow>div{border:1px solid var(--line);border-radius:13px;padding:11px;background:#fcfdfe;min-width:0}
+.assistant-flow b{display:block;font-size:13px;color:#273b49}
+.assistant-flow span{display:block;font-size:11px;color:var(--muted);line-height:1.45;margin-top:4px}
+@media(max-width:720px){.assistant-flow{grid-template-columns:1fr 1fr}}

@@ -19,8 +19,8 @@
     <div class="hero-top">
       <div>
         <div class="eyebrow">THSR QUICK BOOKING · FLAGSHIP STABLE</div>
-        <h1>台灣高鐵<br>一鍵快速訂票 PWA</h1>
-        <p>先把行程、乘客票種與提醒準備好；開賣或要訂票時，一鍵複製行程摘要並直達台灣高鐵官方網路訂票。</p>
+        <h1>台灣高鐵<br>半自動訂位旗艦 PWA</h1>
+        <p>預先準備行程、票種、身分資料與選車規則；進入官網後由訂位助手自動填表、查詢與選車，最後確認前停下由您本人核對。</p>
       </div>
       <div class="train-mark">THSR</div>
     </div>
@@ -48,7 +48,7 @@
       </div>
       <div id="countdownLabel" class="countdown-label">尚未設定開賣提醒時間</div>
       <div class="action-grid">
-        <button id="targetBookNow" class="btn accent big">🚄 複製行程＋開官方訂票</button>
+        <button id="targetBookNow" class="btn accent big">🚄 極速啟動：準備助手＋開官網</button>
         <button id="targetCopySummary" class="btn soft">📋 複製行程摘要</button>
         <button id="targetSaleCalendar" class="btn soft">⏰ 加入開賣提醒</button>
         <button id="targetTravelCalendar" class="btn soft">📅 加入乘車行程</button>
@@ -59,7 +59,7 @@
 
   <section class="card" id="tripFormCard">
     <h2>➕ 新增／編輯行程</h2>
-    <p class="hint">本 PWA 不保存身分證、護照或信用卡資料；需要時請在高鐵官方系統輸入。</p>
+    <p class="hint">行程資料與敏感身分資料分開管理；身分證可在下方選擇「不保存／本次暫存／加密保存」。信用卡資料仍不提供保存。</p>
     <input id="editingId" type="hidden">
     <div class="preset-row">
       <button class="preset" data-from="左營" data-to="台北">左營 → 台北</button>
@@ -88,6 +88,42 @@
       <label class="ticket-count">大學生<input id="studentCount" type="number" min="0" max="10" value="0"></label>
     </div>
     <div id="passengerHint" class="mini-hint"></div>
+
+    <h3 class="subhead">半自動選車規則</h3>
+    <div class="grid">
+      <div class="field">
+        <label for="assistLevel">訂位助手模式</label>
+        <select id="assistLevel">
+          <option value="fill">只自動填表</option>
+          <option value="search">填表＋自動按查詢</option>
+          <option value="select" selected>填表＋查詢＋自動選車（最後確認前停止）</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="trainRule">選車優先規則</label>
+        <select id="trainRule">
+          <option value="after">指定時間後第一班</option>
+          <option value="nearest">最接近指定時間</option>
+          <option value="specific">指定車次優先</option>
+        </select>
+      </div>
+      <div class="field"><label for="trainNo1">指定車次 1</label><input id="trainNo1" inputmode="numeric" placeholder="例如 0123"></div>
+      <div class="field"><label for="trainNo2">備選車次 2</label><input id="trainNo2" inputmode="numeric" placeholder="選填"></div>
+      <div class="field"><label for="trainNo3">備選車次 3</label><input id="trainNo3" inputmode="numeric" placeholder="選填"></div>
+      <div class="field"><label for="timeTolerance">時間容許範圍（分鐘）</label><input id="timeTolerance" type="number" min="0" max="180" value="60"></div>
+      <div class="field">
+        <label for="seatPreference">座位偏好</label>
+        <select id="seatPreference"><option value="不限">不限</option><option value="靠窗">靠窗</option><option value="走道">走道</option></select>
+      </div>
+      <div class="field">
+        <label for="autoNextAfterTrain">選到車次後</label>
+        <select id="autoNextAfterTrain">
+          <option value="stop" selected>停下讓我確認（最穩定）</option>
+          <option value="next">若明確是「下一步」才繼續，最終確認仍停止</option>
+        </select>
+      </div>
+    </div>
+    <div class="mini-hint">「指定車次優先」會依車次 1 → 2 → 3 嘗試；找不到時會停止讓您手動選擇。官網頁面若改版，助手會優先停止而不是亂點。</div>
     <div class="grid top-gap">
       <div class="field"><label for="tripStatus">狀態</label><select id="tripStatus"><option value="計畫中">計畫中</option><option value="待開賣">待開賣</option><option value="待訂票">待訂票</option><option value="已訂位">已訂位</option><option value="已付款">已付款</option><option value="已取票">已取票</option><option value="已取消">已取消</option></select></div>
       <div class="field"><label for="reservationCode">訂位代號（選填）</label><input id="reservationCode" autocomplete="off" placeholder="訂位完成後再填"></div>
@@ -97,11 +133,11 @@
     <div class="row">
       <button id="saveTrip" class="btn accent">💾 儲存行程</button>
       <button id="swapStations" class="btn soft">⇄ 對調起訖站</button>
-      <button id="regularOpenRef" class="btn soft">🗓 一般29日規則參考</button>
+      <button id="regularOpenRef" class="btn soft">🗓 一般29日：選擇＋28日乘車日</button>
       <button id="clearForm" class="btn neutral">清空表單</button>
     </div>
     <div id="formStatus" class="status"></div>
-    <div class="warning">「一般29日規則參考」只會以乘車日往前 28 天、00:00 作為一般規則的參考值；週五／週六延伸訂位及疏運、特殊公告可能不同，請以高鐵官方公告為準。</div>
+    <div class="warning">按「一般29日：選擇＋28日乘車日」會以今天為基準自動計算「今天＋28天」，直接帶入去程日期，並在支援的手機瀏覽器跳出日期選擇器供您確認或改選。這只是一般29日預售邏輯的快捷選日；週五／週六延伸訂位、疏運及特殊公告仍請以高鐵官方公告為準。</div>
   </section>
 
   <section class="card">
@@ -115,6 +151,110 @@
   </section>
 
   <section class="card"><h2>⚡ 主攻行程快速複製</h2><p class="hint">進入官方訂票頁後，必要時快速複製各項資料。</p><div id="quickCopyList" class="quick-list"></div></section>
+
+  <section class="card sensitive-card" id="identityCard">
+    <div class="section-head">
+      <div>
+        <h2>🪪 身分證資料模式</h2>
+        <p class="hint">身分證與一般行程分開保存，且不會被匯出到 JSON 備份。</p>
+      </div>
+      <span id="identityBadge" class="badge badge-neutral">未設定</span>
+    </div>
+
+    <div class="grid">
+      <div class="field">
+        <label for="identityStorageMode">保存方式</label>
+        <select id="identityStorageMode">
+          <option value="none">不保存（最安全）</option>
+          <option value="session">本次暫存（關閉本次瀏覽工作階段後清除）</option>
+          <option value="encrypted">加密保存於此裝置</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="identityFillMode">官網填表方式</label>
+        <select id="identityFillMode">
+          <option value="off">不自動帶入</option>
+          <option value="prompt">執行填表時再詢問（建議）</option>
+          <option value="prefill">從已準備資料自動預填</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="identityType">證件類型</label>
+        <select id="identityType">
+          <option value="twid">中華民國身分證</option>
+          <option value="other">其他證件</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="identityNumber">證件號碼</label>
+        <div class="input-with-button">
+          <input id="identityNumber" type="password" autocomplete="off" inputmode="text" placeholder="例如 A123456789">
+          <button id="toggleIdentityVisibility" type="button" class="btn soft mini">顯示</button>
+        </div>
+      </div>
+
+      <div class="field full encrypted-only">
+        <label for="identityPassphrase">本機加密解鎖碼（至少 6 碼）</label>
+        <input id="identityPassphrase" type="password" autocomplete="new-password" placeholder="只用來解鎖本機加密資料，不會上傳">
+      </div>
+    </div>
+
+    <div class="row">
+      <button id="saveIdentity" class="btn accent">🔐 儲存此設定</button>
+      <button id="unlockIdentity" class="btn soft encrypted-only">🔓 解鎖加密身分證</button>
+      <button id="copyIdentity" class="btn soft">📋 複製身分證</button>
+      <button id="clearIdentity" class="btn danger">清除身分證資料</button>
+    </div>
+    <div id="identityStatus" class="status"></div>
+
+    <div class="security-note">
+      <b>安全設計：</b>
+      「本次暫存」使用 sessionStorage；「加密保存」使用 Web Crypto AES-GCM + PBKDF2 後才寫入 localStorage。
+      加密保存的完整身分證不會出現在一般行程資料、JSON 備份或畫面文字中。
+    </div>
+  </section>
+
+  <section class="card" id="autofillCard">
+    <div class="section-head">
+      <div>
+        <h2>🤖 v2.0 高鐵半自動訂位助手</h2>
+        <p class="hint">依目前主攻行程產生 Safari／Chrome JavaScript 書籤。助手可嘗試自動填表、查詢與選車，但永遠不會自動付款或按最後確認送出。</p>
+      </div>
+      <span class="badge badge-red">最後確認前停止</span>
+    </div>
+
+    <div class="autofill-summary" id="autofillSummary">尚未設定主攻行程。</div>
+
+    <div class="assistant-flow">
+      <div><b>① 填入</b><span>起訖站、日期、時間、票種、身分資料</span></div>
+      <div><b>② 查詢</b><span>依模式自動尋找「查詢／搜尋」按鈕</span></div>
+      <div><b>③ 選車</b><span>指定車次或時間規則選擇車次</span></div>
+      <div><b>④ 停止</b><span>最終確認、驗證、付款都由本人操作</span></div>
+    </div>
+
+    <div class="row">
+      <button id="copyAutofillBookmarklet" class="btn accent">⚡ 複製 v2 訂位助手</button>
+      <button id="copyDiagnosticBookmarklet" class="btn soft">🧪 複製官網診斷工具</button>
+      <button id="toggleAutofillCode" class="btn soft">顯示／隱藏助手程式</button>
+      <a class="btn soft" href="https://irs.thsrc.com.tw/IMINT/" target="_blank" rel="noopener">🚄 開啟官方訂票</a>
+    </div>
+
+    <div id="autofillStatus" class="status"></div>
+    <div id="autofillCode" class="codebox" style="display:none"></div>
+
+    <div class="info">
+      <b>使用方式：</b>先在 PWA 設定主攻行程 → 複製 v2 訂位助手 → 將它設成 Safari／Chrome 書籤 →
+      開啟高鐵官網後執行書籤。若官網換頁造成腳本停止，可在下一頁再按一次同一個書籤，助手會從官網 sessionStorage 讀取本次設定繼續。
+    </div>
+
+    <div class="warning">
+      官網頁面結構可能更新，因此本版採「偵測不到就停止」而非強行點擊。驗證碼、簡訊驗證、優惠資格確認、最終訂位確認及付款一律不自動處理。
+      若官網改版造成欄位辨識失敗，可執行「官網診斷工具」，把診斷文字貼回 ChatGPT，再做精準 selector 更新。
+    </div>
+  </section>
 
   <section class="card">
     <h2>🔔 開賣提醒與搶票模式</h2>
@@ -147,7 +287,7 @@
     </div>
   </section>
 
-  <section class="card privacy-card"><h2>🔒 穩定版資料原則</h2><p>為降低風險，本 PWA <b>不保存身分證號、護照號碼、信用卡號、安全碼</b>，也不破解驗證機制、不自動付款、不自動送出訂位。最後交易仍在台灣高鐵官方系統完成。</p></section>
+  <section class="card privacy-card"><h2>🔒 穩定版資料原則</h2><p>身分證採獨立安全模式，可選不保存、本次暫存或本機加密保存；<b>信用卡號與安全碼仍不提供保存</b>。本工具不破解驗證機制、不自動付款、不自動按最後確認送出；v2.0 自動化最多到填表、查詢與選車輔助，最後交易仍由您在台灣高鐵官方系統確認。</p></section>
   <p class="footer">本工具為個人行程準備與官方訂票捷徑，非台灣高鐵官方 App。官方規則、票價、餘票、優惠與實際訂位結果，以台灣高鐵系統顯示為準。</p>
 </main>
 <script src="./app.js"></script>

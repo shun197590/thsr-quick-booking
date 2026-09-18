@@ -1,7 +1,7 @@
 {
-  "name": "台灣高鐵｜一鍵快速訂票 PWA 極速旗艦穩定版",
-  "short_name": "高鐵極速訂票",
-  "description": "台灣高鐵行程管理、開賣倒數、提醒、備份與官方網路訂票捷徑",
+  "name": "台灣高鐵｜半自動訂位 PWA 極速旗艦穩定版 v2.0",
+  "short_name": "高鐵訂位助手",
+  "description": "台灣高鐵行程管理、開賣倒數、身分證安全模式、半自動填表查詢選車與官方訂位捷徑",
   "lang": "zh-Hant",
   "start_url": "./",
   "scope": "./",
@@ -9,7 +9,17 @@
   "background_color": "#f3f5f7",
   "theme_color": "#101820",
   "icons": [
-    {"src":"./icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
-    {"src":"./icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
   ]
 }
